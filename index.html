@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Luxera - Luxury Redefined</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Playfair Display', serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 2px solid #c4a47c;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: #c4a47c;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      background-color: #111;
+      padding: 1rem 0;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    nav a:hover {
+      color: #c4a47c;
+    }
+
+    .hero {
+      background: url('https://images.unsplash.com/photo-1611599537046-d6b5f79d1ed6?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 1rem 2rem;
+      border: 2px solid #c4a47c;
+      border-radius: 10px;
+    }
+
+    .section {
+      padding: 4rem 2rem;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .section h3 {
+      font-size: 2rem;
+      color: #c4a47c;
+      margin-bottom: 2rem;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .product {
+      background-color: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid #333;
+      transition: 0.3s;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .product:hover {
+      border-color: #c4a47c;
+    }
+
+    .product img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .product h4 {
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .product p {
+      font-size: 1rem;
+      color: #bbb;
+    }
+
+    #contact p {
+      margin: 0.5rem 0;
+    }
+
+    footer {
+      background-color: #111;
+      text-align: center;
+      padding: 2rem;
+      color: #777;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* Chatbot styles */
+
+    #chatbot-toggle {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background-color: #c4a47c;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(196, 164, 124, 0.6);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    #chatbot {
+      position: fixed;
+      bottom: 95px;
+      right: 25px;
+      width: 320px;
+      max-height: 450px;
+      background-color: #1a1a1a;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      color: #000;
+      display: none;
+      z-index: 1000;
+    }
+
+    #chat-header {
+      background-color: #c4a47c;
+      padding: 12px 20px;
+      color: #1a1a1a;
+      font-weight: bold;
+      font-size: 1.1rem;
+      user-select: none;
+    }
+
+    #chat-log {
+      padding: 10px 15px;
+      background-color: #f0f0f0;
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #chat-input-area {
+      display: flex;
+      padding: 10px 15px;
+      background-color: #ddd;
+    }
+
+    #user-input {
+      flex-grow: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    #send-btn {
+      margin-left: 10px;
+      background-color: #c4a47c;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #1a1a1a;
+      transition: background-color 0.3s ease;
+    }
+
+    #send-btn:hover {
+      background-color: #a8874d;
+    }
+
+    /* Chatbot message styles handled dynamically in JS */
+    #chat-log a {
+      color: #1a1a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    #chat-log a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <header id="header">
+    <h1>Luxera</h1>
+    <p>Luxury Redefined</p>
+  </header>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="products.html">Products</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <section class="hero">
+    <h2>Exclusive Collection for Elite Lifestyles</h2>
+  </section>
+
+  <section class="section" id="products">
+    <h3>Signature Collection</h3>
+    <div class="products">
+      <div class="product" onclick="location.href='watch.html'">
+        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=80" alt="Luxury Watch" />
+        <h4>Gold Chrono Watch</h4>
+        <p>Timeless elegance crafted in 18K gold.</p>
+      </div>
+      <div class="product" onclick="location.href='handbag.html'">
+        <img src="https://images.unsplash.com/photo-1602524818162-10308893c07b?auto=format&fit=crop&w=500&q=80" alt="Designer Handbag" />
+        <h4>Designer Handbag</h4>
+        <p>Handmade with fine Italian leather.</p>
+      </div>
+      <div class="product" onclick="location.href='perfume.html'">
+        <img src="https://images.unsplash.com/photo-1593032465171-d64bd33e9c7f?auto=format&fit=crop&w=500&q=80" alt="Luxury Perfume" />
+        <h4>Signature Scent</h4>
+        <p>Exclusive fragrance for elite personalities.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <h3>About Luxera</h3>
+    <p>
+      Luxera is more than a brand – it's a lifestyle. We curate the most luxurious items for the elite who seek perfection, quality, and legacy. Each item reflects our commitment to unparalleled craftsmanship and timeless style.
+    </p>
+  </section>
+
+  <section class="section" id="contact">
+    <h3>Contact Us</h3>
+    <p>Connect with our concierge for personal shopping and VIP service.</p>
+    <p>Email: lucky@luxera.shop | Phone: +91 8770522738</p>
+  </section>
+
+  <footer>
+    &copy; 2025 Luxera. All Rights Reserved.
+  </footer>
+
+  <!-- Chatbot toggle button -->
+  <button id="chatbot-toggle" title="Chat with us">💬</button>
+
+  <!-- Chatbot container -->
+  <div id="chatbot" role="dialog" aria-label="Chatbot">
+    <div id="chat-header">Luxera AI Concierge</div>
+    <div id="chat-log"></div>
+    <div id="chat-input-area">
+      <input type="text" id="user-input" placeholder="Ask me what to buy..." aria-label="Chat input" />
+      <button id="send-btn" aria-label="Send message">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Header click goes to home
+    document.getElementById('header').addEventListener('click', () => {
+      window.location.href = '/'; // Adjust this if homepage is different
+    });
+
+    // Chatbot toggle
+    const chatbotToggle = document.getElementById('chatbot-toggle');
+    const chatbot = document.getElementById('chatbot');
+    chatbotToggle.addEventListener('click', () => {
+      if (chatbot.style.display === 'flex') {
+        chatbot.style.display = 'none';
+      } else {
+        chatbot.style.display = 'flex';
+        document.getElementById('user-input').focus();
+      }
+    });
+
+    // Chatbot logic
+    const chatLog = document.getElementById('chat-log');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function addMessage(text, fromUser = false) {
+      const msg = document.createElement('div');
+      msg.style.padding = '8px 12px';
+      msg.style.marginBottom = '8px';
+      msg.style.borderRadius = '10px';
+      msg.style.maxWidth = '80%';
+      msg.style.whiteSpace = 'pre-wrap';
+      msg.style.wordBreak = 'break-word';
+      msg.style.fontSize = '14px';
+      msg.style.lineHeight = '1.3';
+
+      if (fromUser) {
+        msg.style.backgroundColor = '#c4a47c';
+        msg.style.color = '#1a1a1a';
+        msg.style.alignSelf = 'flex-end';
+        msg.style.textAlign = 'right';
+      } else {
+        msg.style.backgroundColor = '#f0f0f0';
+        msg.style.color = '#000';
+        msg.style.alignSelf = 'flex-start';
+        msg.innerHTML = text; // allow HTML links
+      }
+      msg.textContent = fromUser ? text : '';
+      if (!fromUser) msg.innerHTML = text; // for links
+
+      chatLog.appendChild(msg);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function getBotResponse(text) {
+      text = text.toLowerCase().trim();
+
+      const greetings = ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening', 'greetings'];
+      for (const greet of greetings) {
+        if (text.includes(greet)) {
+          const responses = [
+            "Hello! How can I assist you with luxury items today?",
+            "Hi there! Looking for something special?",
+            "Hey! Feel free to ask me about our exclusive collection.",
+            "Greetings! How may I help you find the perfect luxury item?"
+          ];
+          return responses[Math.floor(Math.random() * responses.length)];
+        }
+      }
+
+      if (text.includes('watch')) {
+        return `Our Gold Chrono Watch is crafted with 18K gold and modern precision. <a href="watch.html">Learn More</a>`;
+      }
+      if (text.includes('handbag') || text.includes('bag')) {
+        return `Our Designer Handbag is handmade with fine Italian leather. <a href="handbag.html">See Details</a>`;
+      }
+      if (text.includes('perfume') || text.includes('scent')) {
+        return `Try our exclusive Signature Scent, perfect for elite personalities. <a href="perfume.html">Explore</a>`;
+      }
+
+      if (text.includes('thank')) {
+        return "You're very welcome! Let me know if you'd like any recommendations.";
+      }
+
+      return "I'm here to help! Try asking about our watch, handbag, or perfume.";
+    }
+
+    function sendMessage() {
+      const text = userInput.value;
+      if (!text) return;
+      addMessage(text, true);
+      userInput.value = '';
+
+      setTimeout(() => {
+        const botReply = getBotResponse(text);
+        addMessage(botReply);
+      }, 600);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    // Optional: initial bot greeting when opened
+    chatbotToggle.addEventListener('click', () => {
+      if (chatbot.style.display === 'flex' && chatLog.children.length === 0) {
+        addMessage("Welcome to Luxera! Ask me about our exclusive luxury products.");
+      }
+    });
+  </script>
+</body>
+
+</html>
