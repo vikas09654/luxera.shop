@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Luxera - Luxury Redefined</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <style>
     * {
       margin: 0;
@@ -24,17 +25,46 @@
 
     header {
       background-color: #1a1a1a;
-      padding: 2rem;
-      text-align: center;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border-bottom: 2px solid #c4a47c;
+    }
+
+    .header-content {
       cursor: pointer;
       user-select: none;
+      text-align: left;
     }
 
     header h1 {
-      font-size: 3rem;
+      font-size: 2.5rem;
       color: #c4a47c;
       letter-spacing: 2px;
+    }
+
+    .cart-icon {
+      font-size: 1.8rem;
+      color: #c4a47c;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-color: #c4a47c;
+      color: #1a1a1a;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Roboto', sans-serif;
     }
 
     nav {
@@ -99,8 +129,6 @@
       border-radius: 12px;
       border: 1px solid #333;
       transition: 0.3s;
-      cursor: pointer;
-      user-select: none;
     }
 
     .product:hover {
@@ -122,6 +150,32 @@
     .product p {
       font-size: 1rem;
       color: #bbb;
+      margin-bottom: 1rem;
+    }
+
+    .price {
+      font-size: 1.3rem;
+      color: #c4a47c;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .add-to-cart {
+      background-color: #c4a47c;
+      color: #1a1a1a;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-family: 'Roboto', sans-serif;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .add-to-cart:hover {
+      background-color: #a8874d;
+      transform: translateY(-2px);
     }
 
     #contact p {
@@ -138,7 +192,6 @@
     }
 
     /* Chatbot styles */
-
     #chatbot-toggle {
       position: fixed;
       bottom: 25px;
@@ -241,9 +294,15 @@
 </head>
 
 <body>
-  <header id="header">
-    <h1>Luxera</h1>
-    <p>Luxury Redefined</p>
+  <header>
+    <div class="header-content" id="header">
+      <h1>Luxera</h1>
+      <p>Luxury Redefined</p>
+    </div>
+    <div class="cart-icon" onclick="location.href='cart.html'">
+      <i class="fas fa-shopping-bag"></i>
+      <span class="cart-count" id="cart-count">0</span>
+    </div>
   </header>
 
   <nav>
@@ -260,20 +319,26 @@
   <section class="section" id="products">
     <h3>Signature Collection</h3>
     <div class="products">
-      <div class="product" onclick="location.href='watch.html'">
+      <div class="product">
         <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=80" alt="Luxury Watch" />
         <h4>Gold Chrono Watch</h4>
         <p>Timeless elegance crafted in 18K gold.</p>
+        <div class="price">$12,500</div>
+        <button class="add-to-cart" onclick="addToCart('Gold Chrono Watch', 12500, 'watch.html')">Add to Cart</button>
       </div>
-      <div class="product" onclick="location.href='handbag.html'">
+      <div class="product">
         <img src="https://images.unsplash.com/photo-1602524818162-10308893c07b?auto=format&fit=crop&w=500&q=80" alt="Designer Handbag" />
         <h4>Designer Handbag</h4>
         <p>Handmade with fine Italian leather.</p>
+        <div class="price">$8,750</div>
+        <button class="add-to-cart" onclick="addToCart('Designer Handbag', 8750, 'handbag.html')">Add to Cart</button>
       </div>
-      <div class="product" onclick="location.href='perfume.html'">
+      <div class="product">
         <img src="https://images.unsplash.com/photo-1593032465171-d64bd33e9c7f?auto=format&fit=crop&w=500&q=80" alt="Luxury Perfume" />
         <h4>Signature Scent</h4>
         <p>Exclusive fragrance for elite personalities.</p>
+        <div class="price">$950</div>
+        <button class="add-to-cart" onclick="addToCart('Signature Scent', 950, 'perfume.html')">Add to Cart</button>
       </div>
     </div>
   </section>
@@ -309,9 +374,41 @@
   </div>
 
   <script>
+    // Cart functionality
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    function updateCartCount() {
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cart-count').textContent = count;
+    }
+    
+    function addToCart(name, price, productLink) {
+      const existingItem = cart.find(item => item.name === name);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          name: name,
+          price: price,
+          quantity: 1,
+          link: productLink
+        });
+      }
+      
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      
+      // Show confirmation
+      alert(`${name} has been added to your cart`);
+    }
+    
+    // Initialize cart count on page load
+    updateCartCount();
+
     // Header click goes to home
     document.getElementById('header').addEventListener('click', () => {
-      window.location.href = '/'; // Adjust this if homepage is different
+      window.location.href = '/';
     });
 
     // Chatbot toggle
@@ -377,13 +474,17 @@
       }
 
       if (text.includes('watch')) {
-        return `Our Gold Chrono Watch is crafted with 18K gold and modern precision. <a href="watch.html">Learn More</a>`;
+        return `Our Gold Chrono Watch is crafted with 18K gold and modern precision. <a href="watch.html">Learn More</a> or <button onclick="addToCart('Gold Chrono Watch', 12500, 'watch.html')" style="background: #c4a47c; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-top: 5px;">Add to Cart</button>`;
       }
       if (text.includes('handbag') || text.includes('bag')) {
-        return `Our Designer Handbag is handmade with fine Italian leather. <a href="handbag.html">See Details</a>`;
+        return `Our Designer Handbag is handmade with fine Italian leather. <a href="handbag.html">See Details</a> or <button onclick="addToCart('Designer Handbag', 8750, 'handbag.html')" style="background: #c4a47c; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-top: 5px;">Add to Cart</button>`;
       }
       if (text.includes('perfume') || text.includes('scent')) {
-        return `Try our exclusive Signature Scent, perfect for elite personalities. <a href="perfume.html">Explore</a>`;
+        return `Try our exclusive Signature Scent, perfect for elite personalities. <a href="perfume.html">Explore</a> or <button onclick="addToCart('Signature Scent', 950, 'perfume.html')" style="background: #c4a47c; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-top: 5px;">Add to Cart</button>`;
+      }
+      
+      if (text.includes('cart')) {
+        return `You can view your cart <a href="cart.html">here</a>. Currently you have ${cart.reduce((total, item) => total + item.quantity, 0)} items in your cart.`;
       }
 
       if (text.includes('thank')) {
@@ -413,7 +514,7 @@
     // Optional: initial bot greeting when opened
     chatbotToggle.addEventListener('click', () => {
       if (chatbot.style.display === 'flex' && chatLog.children.length === 0) {
-        addMessage("Welcome to Luxera! Ask me about our exclusive luxury products.");
+        addMessage("Welcome to Luxera! Ask me about our exclusive luxury products or how to add items to your cart.");
       }
     });
   </script>
